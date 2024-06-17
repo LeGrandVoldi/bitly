@@ -1,0 +1,13 @@
+<%- include("./header.ejs") %>
+<%- include("./boostrap.ejs") %>
+
+<ul>
+<% for (let all of allURL){ %>
+    <li style="background-color: #B2BABB50;">
+       <p>url Long  : <a href="<%= all.urlLong %>" target="_blank"><%= all.urlLong %></a></p>
+       <p>url Court : <a href="/<%= all.urlCourt %>" target="_blank"><%= all.urlCourt %></a></p>
+    </li>
+   
+<% } %>
+</ul>
+<%- include('./footer.ejs') %>

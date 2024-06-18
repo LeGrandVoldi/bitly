@@ -1,13 +1,44 @@
 <%- include("./header.ejs") %>
 <%- include("./boostrap.ejs") %>
-
-<ul>
+<%- include("./sweet.ejs") %>
+<a href="/"><button  class="btn btn-info" style="position: fixed;top: 10px;left: 10px;">Retour</button></a><br>
+<ul style="margin-top: 70px;">
 <% for (let all of allURL){ %>
     <li style="background-color: #B2BABB50;">
        <p>url Long  : <a href="<%= all.urlLong %>" target="_blank"><%= all.urlLong %></a></p>
        <p>url Court : <a href="/<%= all.urlCourt %>" target="_blank"><%= all.urlCourt %></a></p>
+       <p><img src="<%= all.codeQR %>" alt="" width="200px" height="200px"></p>
+       <p><button onclick='sup("<%= all.id %>")'  class="btn btn-danger">supprimer</button></p>
     </li>
    
 <% } %>
 </ul>
+<script>
+    async function sup(id){
+        Swal.fire({
+        title: "Etes vous sûr?",
+        text: "Ypour la supression!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Oui, supprime le!"
+        }).then(async(result) => {
+        if (result.isConfirmed) {
+            try {
+                const response = await fetch(`/supprimer/${id}`, { method: "DELETE" });
+                if (response.ok) {
+                    window.location.href = "/ajouterURL";
+                } else {
+                console.error("erreur de la suppression");
+                }
+            } catch (error) {
+                console.error("erreur reseaux:", error);
+            }
+        }
+    });
+      
+    
+}
+</script>
 <%- include('./footer.ejs') %>

@@ -2,8 +2,9 @@
 <%- include("./boostrap.ejs") %>
 <%- include("./sweet.ejs") %>
 <form action="/ajouterURL" method="post" class="">
-   <label for="">Entrez URL long <input type="text" class="form-control" style="width: 600px;" required name="urlLong"></label><br>
-   <label for="">Entrez nouveau URL <input type="text" class="form-control" style="width: 400px;" required name="urlCourt"></label><br><br>
+   <label for="">Entrez URL long <input type="text" class="form-control" style="width: 55vw;" required name="urlLong" autocomplete="off"></label><br>
+   <label for="">Entrez nouveau URL <input type="text" class="form-control" style="width: 40vw;" required name="urlCourt" autocomplete="off"></label><br><br>
+   <p style="background-color: red;color: white;"><%= message %></p>
    <button type="submit" class="btn btn-primary">Valider</button>
 </form>
 <%- include('./footer.ejs') %>

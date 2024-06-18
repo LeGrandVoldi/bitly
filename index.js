@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const bodyParser = require('body-parser');
 const app = express();
+const QRCode = require('qrcode');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -21,15 +22,39 @@ let obj = {
 
 }
 app.get("/",(req , res) =>{
-    res.render("index");
+    message = "";
+    res.render("index" ,{ message });
 })
-app.post("/ajouterURL" , (req , res) =>{
+app.post("/ajouterURL" ,async (req , res) =>{
     const urlLong = req.body.urlLong;
     const urlCourt = req.body.urlCourt;
-    obj.urlLong = urlLong ;
-    obj.urlCourt = urlCourt ;
-    allURL.push(obj);
-    obj = {};
+    const qrCodeDataURL = await QRCode.toDataURL(urlLong);
+    let id = (new Date()).getTime().toString(16)
+    let valide = 0 ;
+    for(let i = 0 ; i < allURL.length ; i++){
+        if(urlCourt == allURL[i].urlCourt){
+            valide += 1 ;
+        }
+    }
+    if(valide != 0){
+        message = "URL court déjà utilisé";
+        res.render("index" ,{ message });
+    }else{
+        obj.id = id ;
+        obj.urlLong = urlLong ;
+        obj.urlCourt = urlCourt ;
+        
+        obj.codeQR = qrCodeDataURL ;
+        allURL.push(obj);
+        obj = {};
+           
+        allURLResponse();
+        res.render("allURL" , { allURL })
+    }
+    
+    
+})
+app.get("/ajouterURL" ,async (req , res) =>{
     
     allURLResponse();
     res.render("allURL" , { allURL })
@@ -43,6 +68,18 @@ function allURLResponse(){
         });   
     }
 }
+
+app.delete("/supprimer/:id", (req, res) => {
+    const { id } = req.params;
+ 
+    const articleIndex = allURL.findIndex((allURL) => allURL.id === id);
+    allURL.splice(articleIndex, 1);
+
+    allURLResponse();
+    res.render("allURL" , { allURL })
+
+});
+
 const port = 3005;
 app.listen(port,function(){
     console.log(`l'application ecoute sur le port ${port}`);
